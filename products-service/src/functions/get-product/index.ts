@@ -1,7 +1,5 @@
 import { handlerPath } from '@libs/handler-resolver'
-// import { getProductHandler } from "./handler";
 
-// export {getProductHandler as getProductHandlerTest};
 export default {
   handler: `${handlerPath(__dirname)}/handler.main`,
   events: [
@@ -9,6 +7,12 @@ export default {
       http: {
         method: 'get',
         path: 'products/{productId}',
+        responses: {
+          200: {
+            description: 'successfull response',
+            bodyType: 'Product',
+          },
+        },
       },
     },
   ],

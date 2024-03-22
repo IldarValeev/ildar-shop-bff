@@ -5,7 +5,7 @@ import getProducts from '@functions/get-products';
 const serverlessConfiguration: AWS = {
 	service: 'products-service',
 	frameworkVersion: '3',
-	plugins: ['serverless-esbuild'],
+	plugins: ['serverless-auto-swagger', 'serverless-offline', 'serverless-esbuild'],
 	provider: {
 		name: 'aws',
 		runtime: 'nodejs18.x',
@@ -39,6 +39,9 @@ const serverlessConfiguration: AWS = {
 			platform: 'node',
 			concurrency: 10,
 		},
+		autoswagger:{
+			typefiles: ['src/types/product.ts']
+		}
 	},
 };
 

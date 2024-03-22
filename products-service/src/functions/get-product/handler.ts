@@ -2,14 +2,14 @@ import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import productsData from 'src/data/products.json';
-import { Product } from 'src/types/product';
+import { ProductsList } from 'src/types/product';
 
 const getProduct: APIGatewayProxyHandler = async (event) => {
   console.info(`getProduct. Incoming event: ${JSON.stringify(event)}`);
 
   try {
     const { productId = '' } = event.pathParameters;
-    const product = (productsData as Product[]).find(product => product.id === productId);
+    const product = (productsData as ProductsList).find(product => product.id === productId);
 
     if (product) {
       return formatJSONResponse({
