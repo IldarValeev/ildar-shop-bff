@@ -1,6 +1,6 @@
 import type { AWS } from '@serverless/typescript';
-
-import hello from '@functions/hello';
+import getProduct from '@functions/get-product';
+import getProducts from '@functions/get-products';
 
 const serverlessConfiguration: AWS = {
 	service: 'products-service',
@@ -8,7 +8,7 @@ const serverlessConfiguration: AWS = {
 	plugins: ['serverless-esbuild'],
 	provider: {
 		name: 'aws',
-		runtime: 'nodejs14.x',
+		runtime: 'nodejs18.x',
 		region: 'eu-west-1',
 		httpApi: {
 			cors: true,
@@ -23,7 +23,10 @@ const serverlessConfiguration: AWS = {
 		},
 	},
 	// import the function via paths
-	functions: { hello },
+	functions: {
+		 getProduct,
+		 getProducts,
+	 },
 	package: { individually: true },
 	custom: {
 		esbuild: {
@@ -31,7 +34,7 @@ const serverlessConfiguration: AWS = {
 			minify: false,
 			sourcemap: true,
 			exclude: ['aws-sdk'],
-			target: 'node14',
+			target: 'node18',
 			define: { 'require.resolve': undefined },
 			platform: 'node',
 			concurrency: 10,
