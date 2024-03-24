@@ -1,2 +1,2 @@
-# ildar-shop-bff
-ildar-shop-bff
+# ildar-shop-service
+ildar-shop-service
