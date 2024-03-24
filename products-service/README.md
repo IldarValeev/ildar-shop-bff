@@ -8,7 +8,7 @@ npm run offline
 ```
 npm run swagger
 ```
-## Deploy all to aws
+## Deploy all to AWS
 ```
 npm run all
 ```
