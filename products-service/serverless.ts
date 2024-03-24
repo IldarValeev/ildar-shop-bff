@@ -1,9 +1,9 @@
 import type { AWS } from '@serverless/typescript';
-import getProduct from '@functions/get-product';
-import getProducts from '@functions/get-products';
+import getProductsList from '@functions/getProductsList';
+import getProductById from '@functions/getProductById';
 
 const serverlessConfiguration: AWS = {
-	service: 'products-service',
+	service: 'ildar-eshop-products-service',
 	frameworkVersion: '3',
 	plugins: ['serverless-auto-swagger', 'serverless-offline', 'serverless-esbuild'],
 	provider: {
@@ -24,9 +24,9 @@ const serverlessConfiguration: AWS = {
 	},
 	// import the function via paths
 	functions: {
-		 getProduct,
-		 getProducts,
-	 },
+		getProductsList,
+		getProductById,
+	},
 	package: { individually: true },
 	custom: {
 		esbuild: {
@@ -39,7 +39,7 @@ const serverlessConfiguration: AWS = {
 			platform: 'node',
 			concurrency: 10,
 		},
-		autoswagger:{
+		autoswagger: {
 			typefiles: ['src/types/product.ts']
 		}
 	},

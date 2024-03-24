@@ -12,6 +12,10 @@ export default {
             description: 'successfull response',
             bodyType: 'Product',
           },
+          404: {
+						description: 'Producut by id was not found',
+						bodyType: 'String',
+					}
         },
       },
     },

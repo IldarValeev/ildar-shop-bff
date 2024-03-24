@@ -1,12 +1,15 @@
 {
-  "name": "products-service",
+  "name": "ildar-eshop-products-service",
   "version": "1.0.0",
   "description": "Serverless aws-nodejs-typescript template",
   "main": "serverless.ts",
   "scripts": {
     "test": "jest",
+		"swagger": "sls generate-swagger",
+		"offline": "sls offline start",
     "deploy": "sls deploy",
-    "all": "npm test && npm run deploy"
+    "all": "npm run deploy",
+    "serverless:remove": "sls remove"
   },
   "engines": {
     "node": ">=14.15.0"

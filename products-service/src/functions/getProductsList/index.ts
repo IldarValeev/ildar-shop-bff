@@ -10,7 +10,7 @@ export default {
         responses: {
           200: {
             description: 'successfull response',
-            bodyType: 'ProductsList',
+            bodyType: 'IProductsList',
           },
         },
       },

@@ -1,3 +1,22 @@
+# ildar-eshop-products-service
+
+## Run the app on localhost:3000
+```
+npm run offline
+```
+## Generate swagger locally
+```
+npm run swagger
+```
+## Deploy all to aws
+```
+npm run all
+```
+
+
+
+
+
 # Serverless - AWS Node.js Typescript
 
 This project has been generated using the `aws-nodejs-typescript` template from the [Serverless framework](https://www.serverless.com/).

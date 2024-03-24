@@ -1,4 +1,4 @@
-import { getProductsHandlerTest } from '@functions/get-products';
+import { getProductsHandlerTest } from '@functions/getProductsList';
 
 describe("[getProductsHandler not crashed]", () => {
     it("should not crash", async () => {
