@@ -1,0 +1,184 @@
+{
+    "ProductsTable": [
+      {
+        "PutRequest": {
+          "Item": {
+            "id": {
+              "S": "0567ec4b-b10c-48c5-9345-fc73c48a80aa"
+            },
+            "title": {
+              "S": "Ildar_Product_0"
+            },
+            "description": {
+              "S": "Short Ildar Product Description_0"
+            },
+            "price": {
+              "N": "0.99"
+            }
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "id": {
+              "S": "1567ec4b-b10c-48c5-9345-fc73c48a80aa"
+            },
+            "title": {
+              "S": "Ildar_Product_1"
+            },
+            "description": {
+              "S": "Short Ildar Product Description_1"
+            },
+            "price": {
+              "N": "19.99"
+            }
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "id": {
+              "S": "2567ec4b-b10c-48c5-9345-fc73c48a80aa"
+            },
+            "title": {
+              "S": "Ildar_Product_2"
+            },
+            "description": {
+              "S": "Short Ildar Product Description_2"
+            },
+            "price": {
+              "N": "29.99"
+            }
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "id": {
+              "S": "3567ec4b-b10c-48c5-9345-fc73c48a80aa"
+            },
+            "title": {
+              "S": "Ildar_Product_3"
+            },
+            "description": {
+              "S": "Short Ildar Product Description_3"
+            },
+            "price": {
+              "N": "39.99"
+            }
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "id": {
+              "S": "4567ec4b-b10c-48c5-9345-fc73c48a80aa"
+            },
+            "title": {
+              "S": "Ildar_Product_4"
+            },
+            "description": {
+              "S": "Short Ildar Product Description_4"
+            },
+            "price": {
+              "N": "49.99"
+            }
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "id": {
+              "S": "5567ec4b-b10c-48c5-9345-fc73c48a80aa"
+            },
+            "title": {
+              "S": "Ildar_Product_5"
+            },
+            "description": {
+              "S": "Short Ildar Product Description_5"
+            },
+            "price": {
+              "N": "59.99"
+            }
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "id": {
+              "S": "6567ec4b-b10c-48c5-9345-fc73c48a80aa"
+            },
+            "title": {
+              "S": "Ildar_Product_6"
+            },
+            "description": {
+              "S": "Short Ildar Product Description_6"
+            },
+            "price": {
+              "N": "69.99"
+            }
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "id": {
+              "S": "7567ec4b-b10c-48c5-9345-fc73c48a80aa"
+            },
+            "title": {
+              "S": "Ildar_Product_7"
+            },
+            "description": {
+              "S": "Short Ildar Product Description_7"
+            },
+            "price": {
+              "N": "79.99"
+            }
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "id": {
+              "S": "8567ec4b-b10c-48c5-9345-fc73c48a80aa"
+            },
+            "title": {
+              "S": "Ildar_Product_8"
+            },
+            "description": {
+              "S": "Short Ildar Product Description_8"
+            },
+            "price": {
+              "N": "89.99"
+            }
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "id": {
+              "S": "9567ec4b-b10c-48c5-9345-fc73c48a80aa"
+            },
+            "title": {
+              "S": "Ildar_Product_9"
+            },
+            "description": {
+              "S": "Short Ildar Product Description_9"
+            },
+            "price": {
+              "N": "99.99"
+            }
+          }
+        }
+      }
+    ]
+  }

@@ -39,7 +39,7 @@ const serverlessConfiguration: AWS = {
 						],
 						Resource: [
 							{ 'Fn::GetAtt': ['${self:provider.environment.PRODUCTS_TABLE_NAME}', 'Arn'] },
-							{ 'Fn::GetAtt': ['${self:provider.environment.PRODUCTS_TABLE_NAME}', 'Arn'] },
+							{ 'Fn::GetAtt': ['${self:provider.environment.STOCKS_TABLE_NAME}', 'Arn'] },
 						],
 					},
 				],

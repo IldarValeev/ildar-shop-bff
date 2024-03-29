@@ -5,6 +5,7 @@
   "main": "serverless.ts",
   "scripts": {
     "test": "jest",
+    "db-fill": "cd src/data/db/db-fill && tables-data-fill.bat", 
 		"swagger": "sls generate-swagger",
 		"offline": "sls offline start",
     "deploy": "sls deploy",
