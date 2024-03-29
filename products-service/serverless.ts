@@ -20,12 +20,69 @@ const serverlessConfiguration: AWS = {
 		environment: {
 			AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
 			NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+			PRODUCTS_TABLE_NAME: '${self:resources.Resources.ProductsTable.Properties.TableName}',
+			STOCKS_TABLE_NAME: '${self:resources.Resources.StocksTable.Properties.TableName}',
+		},
+		iam: {
+			role: {
+				statements: [
+					{
+						Effect: 'Allow',
+						Action: [
+							'dynamodb:DescribeTable',
+							'dynamodb:Query',
+							'dynamodb:Scan',
+							'dynamodb:GetItem',
+							'dynamodb:PutItem',
+							'dynamodb:UpdateItem',
+							'dynamodb:DeleteItem',
+						],
+						Resource: [
+							{ 'Fn::GetAtt': ['${self:provider.environment.PRODUCTS_TABLE_NAME}', 'Arn'] },
+							{ 'Fn::GetAtt': ['${self:provider.environment.PRODUCTS_TABLE_NAME}', 'Arn'] },
+						],
+					},
+				],
+			},
 		},
 	},
+	
 	// import the function via paths
 	functions: {
 		getProductsList,
 		getProductById,
+	},
+	resources: {
+		Resources: {
+			ProductsTable: {
+				Type: 'AWS::DynamoDB::Table',
+				DeletionPolicy: 'Delete',
+				Properties: {
+					TableName: 'ProductsTable',
+					AttributeDefinitions: [
+						{ AttributeName: 'id', AttributeType: 'S' },
+					],
+					KeySchema: [
+						{ AttributeName: 'id', KeyType: 'HASH' },
+					],
+					BillingMode: 'PAY_PER_REQUEST'
+				},
+			},
+			StocksTable: {
+				Type: 'AWS::DynamoDB::Table',
+				DeletionPolicy: 'Delete',
+				Properties: {
+					TableName: 'StocksTable',
+					AttributeDefinitions: [
+						{ AttributeName: 'product_id', AttributeType: 'S' },
+					],
+					KeySchema: [
+						{ AttributeName: 'product_id', KeyType: 'HASH' },
+					],
+					BillingMode: 'PAY_PER_REQUEST'
+				},
+			}
+		}
 	},
 	package: { individually: true },
 	custom: {
