@@ -1,15 +1,19 @@
-import { formatJSONResponse } from '@libs/api-gateway';
+import { ValidatedEventAPIGatewayProxyEvent, formatJSONErrorResponse, formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { APIGatewayProxyHandler } from 'aws-lambda';
-import productsData from 'src/data/products.json';
-import { ProductsList as IProductsList } from 'src/types/product';
+import { ProductsDbService } from 'src/data/db/db-service/products-dynamo-db-service';
+import schema from './schema';
 
-const getProductById: APIGatewayProxyHandler = async (event) => {
-  console.info(`getProductById. Incoming event: ${JSON.stringify(event)}`);
+const SOURCE = `Lambda [getProductById] -`
+
+const getProductById: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+  console.log(`${SOURCE} started`);
+  console.log(`${SOURCE} event: ${JSON.stringify(event)}`);
+
+  const productsDbService = new ProductsDbService();
 
   try {
     const { productId = '' } = event.pathParameters;
-    const product = (productsData as IProductsList).find(product => product.id === productId);
+    const product = await productsDbService.getProductById(productId);
 
     if (product) {
       return formatJSONResponse({
@@ -20,9 +24,10 @@ const getProductById: APIGatewayProxyHandler = async (event) => {
     return formatJSONResponse({ message: `Product '${productId}' not found` }, 404);
   }
   catch (e) {
-    return formatJSONResponse({
-      error: e.stack
-    });
+    return formatJSONErrorResponse(e, SOURCE);
+  }
+  finally {
+    productsDbService.destroy();
   }
 };
 

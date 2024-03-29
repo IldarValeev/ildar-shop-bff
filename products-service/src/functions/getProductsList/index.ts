@@ -10,9 +10,10 @@ export default {
         responses: {
           default: {},
           200: {
-            description: 'successfull response',
+            description: 'List of all products',
             bodyType: 'ProductsList',
           },
+          500: 'Backend Error',
         },
       },
     },

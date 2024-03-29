@@ -10,13 +10,14 @@ export default {
         responses: {
           default: {},
           200: {
-            description: 'successfull response',
+            description: 'Product returned by id',
             bodyType: 'Product',
           },
           404: {
-						description: 'Producut by id was not found',
+						description: 'Product by id was not found',
 						bodyType: 'String',
-					}
+					},
+          500: 'Backend Error',
         },
       },
     },

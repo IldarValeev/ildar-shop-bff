@@ -12,6 +12,9 @@ npm run swagger
 ```
 npm run all
 ```
+## Deploy new data to products and stocks tables in AWS
+```
+npm run tables-data-fill
 
 
 
