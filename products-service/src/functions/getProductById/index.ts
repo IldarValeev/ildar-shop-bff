@@ -11,7 +11,7 @@ export default {
           default: {},
           200: {
             description: 'Product returned by id',
-            bodyType: 'Product',
+            bodyType: 'IProduct',
           },
           404: {
 						description: 'Product by id was not found',

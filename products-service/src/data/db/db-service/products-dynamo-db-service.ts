@@ -1,7 +1,10 @@
-import { GetCommandInput, GetCommandOutput, ScanCommandInput, ScanCommandOutput} from '@aws-sdk/lib-dynamodb';
+import { GetCommandInput, GetCommandOutput, ScanCommandInput, ScanCommandOutput, PutCommandInput } from '@aws-sdk/lib-dynamodb';
 import { DynamoDbService } from './dynamo-db-service-base';
 import { IProduct, ProductsList } from 'src/types/product';
 import { IStock } from 'src/types/stock';
+import { ICreateProduct } from 'src/types/create-product';
+import { v4 as uuidv4 } from 'uuid';
+import { ProductDb as ProductDB } from './product-db';
 
 const PRODUCTS_TABLE_NAME: string = process.env.PRODUCTS_TABLE_NAME;
 const STOCKS_TABLE_NAME: string = process.env.STOCKS_TABLE_NAME;
@@ -47,6 +50,50 @@ export class ProductsDbService extends DynamoDbService {
         return product && this.mergeProductWithStockCount(product, stock);
     }
 
+    public async createProduct(productToCreate: ICreateProduct): Promise<IProduct> {
+        const id: string = uuidv4();
+
+        const productDB: ProductDB = {
+            id,
+            description: productToCreate.description,
+            price: productToCreate.price,
+            title: productToCreate.title,
+        }
+
+        const productParams: PutCommandInput = {
+            TableName: PRODUCTS_TABLE_NAME,
+            Item: {
+                id,
+
+                ...productDB,
+            },
+        };
+
+        const stocksParams: PutCommandInput = {
+            TableName: STOCKS_TABLE_NAME,
+            Item: {
+                product_id: id,
+                count: productToCreate.count,
+            },
+        };
+
+        await this.transactionWrite({
+            TransactItems: [{
+                Put: productParams,
+            }, {
+                Put: stocksParams,
+            }],
+        });
+
+        const createdProduct: IProduct = {
+            id,
+
+            ...productToCreate,
+        };
+
+        return createdProduct
+    }
+
     private mergeProductsWithStocksByCount(products: ProductsList = [], stocks: IStock[] = []): ProductsList {
         return products.map((product: IProduct) => {
             const stock: IStock = stocks.find(({ product_id }: IStock): boolean => product.id == product_id);
@@ -54,9 +101,10 @@ export class ProductsDbService extends DynamoDbService {
         });
     }
 
-	private mergeProductWithStockCount(product: IProduct, stock: IStock): IProduct {
+    private mergeProductWithStockCount(product: IProduct, stock: IStock): IProduct {
         return {
             ...product,
+
             count: stock?.count || 0,
         };
     }

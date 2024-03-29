@@ -1,6 +1,7 @@
 import type { AWS } from '@serverless/typescript';
 import getProductsList from '@functions/getProductsList';
 import getProductById from '@functions/getProductById';
+import createProduct from '@functions/createProduct';
 
 const serverlessConfiguration: AWS = {
 	service: 'ildar-eshop-products-service',
@@ -51,6 +52,7 @@ const serverlessConfiguration: AWS = {
 	functions: {
 		getProductsList,
 		getProductById,
+		createProduct,
 	},
 	resources: {
 		Resources: {
@@ -97,7 +99,11 @@ const serverlessConfiguration: AWS = {
 			concurrency: 10,
 		},
 		autoswagger: {
-			typefiles: ['src/types/product.ts']
+			typefiles: [
+				'src/types/create-product.ts',
+				'src/types/product.ts',
+				'src/types/stock.ts',
+			]
 		}
 	},
 };
