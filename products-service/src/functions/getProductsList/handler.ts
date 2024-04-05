@@ -1,20 +1,27 @@
-import { formatJSONResponse } from '@libs/api-gateway';
+import { formatJSONErrorResponse, ValidatedEventAPIGatewayProxyEvent, formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { APIGatewayProxyHandler } from 'aws-lambda';
-import productsData from 'src/data/products.json';
-import { ProductsList } from 'src/types/product';
+import { ProductsDbService } from 'src/data/db/db-service/products-dynamo-db-service';
+import schema from './schema';
 
-const getProductsList: APIGatewayProxyHandler = async (event) => {
-  console.info(`getProductsList. Incoming event: ${JSON.stringify(event)}`);
+const SOURCE = `Lambda [getProductsList] -`
+
+const getProductsList: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+  console.log(`${SOURCE} started`);
+  console.log(`${SOURCE} event: ${JSON.stringify(event)}`);
+
+  const productsDbService = new ProductsDbService();
 
   try {
-    const productList = productsData as ProductsList;
+    const productList = await productsDbService.getProductsList();
+
     return formatJSONResponse(productList);
   }
   catch (e) {
-    return formatJSONResponse({
-      error: e.stack
-    });
+    return formatJSONErrorResponse(e, SOURCE);
+  }
+  finally {
+    productsDbService?.delete;
+    console.log(`${SOURCE} finished`);
   }
 };
 

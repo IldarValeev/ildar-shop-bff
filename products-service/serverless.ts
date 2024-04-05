@@ -1,6 +1,7 @@
 import type { AWS } from '@serverless/typescript';
 import getProductsList from '@functions/getProductsList';
 import getProductById from '@functions/getProductById';
+import createProduct from '@functions/createProduct';
 
 const serverlessConfiguration: AWS = {
 	service: 'ildar-eshop-products-service',
@@ -20,12 +21,70 @@ const serverlessConfiguration: AWS = {
 		environment: {
 			AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
 			NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+			PRODUCTS_TABLE_NAME: '${self:resources.Resources.ProductsTable.Properties.TableName}',
+			STOCKS_TABLE_NAME: '${self:resources.Resources.StocksTable.Properties.TableName}',
+		},
+		iam: {
+			role: {
+				statements: [
+					{
+						Effect: 'Allow',
+						Action: [
+							'dynamodb:DescribeTable',
+							'dynamodb:Query',
+							'dynamodb:Scan',
+							'dynamodb:GetItem',
+							'dynamodb:PutItem',
+							'dynamodb:UpdateItem',
+							'dynamodb:DeleteItem',
+						],
+						Resource: [
+							{ 'Fn::GetAtt': ['${self:provider.environment.PRODUCTS_TABLE_NAME}', 'Arn'] },
+							{ 'Fn::GetAtt': ['${self:provider.environment.STOCKS_TABLE_NAME}', 'Arn'] },
+						],
+					},
+				],
+			},
 		},
 	},
+	
 	// import the function via paths
 	functions: {
 		getProductsList,
 		getProductById,
+		createProduct,
+	},
+	resources: {
+		Resources: {
+			ProductsTable: {
+				Type: 'AWS::DynamoDB::Table',
+				DeletionPolicy: 'Delete',
+				Properties: {
+					TableName: 'ProductsTable',
+					AttributeDefinitions: [
+						{ AttributeName: 'id', AttributeType: 'S' },
+					],
+					KeySchema: [
+						{ AttributeName: 'id', KeyType: 'HASH' },
+					],
+					BillingMode: 'PAY_PER_REQUEST'
+				},
+			},
+			StocksTable: {
+				Type: 'AWS::DynamoDB::Table',
+				DeletionPolicy: 'Delete',
+				Properties: {
+					TableName: 'StocksTable',
+					AttributeDefinitions: [
+						{ AttributeName: 'product_id', AttributeType: 'S' },
+					],
+					KeySchema: [
+						{ AttributeName: 'product_id', KeyType: 'HASH' },
+					],
+					BillingMode: 'PAY_PER_REQUEST'
+				},
+			}
+		}
 	},
 	package: { individually: true },
 	custom: {
@@ -40,7 +99,11 @@ const serverlessConfiguration: AWS = {
 			concurrency: 10,
 		},
 		autoswagger: {
-			typefiles: ['src/types/product.ts']
+			typefiles: [
+				'src/types/create-product.ts',
+				'src/types/product.ts',
+				'src/types/stock.ts',
+			]
 		}
 	},
 };

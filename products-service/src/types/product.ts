@@ -1,4 +1,4 @@
-export interface Product {
+export interface IProduct {
     /** Available count */
     count: number;
     description: string;
@@ -7,4 +7,4 @@ export interface Product {
     title: string;
   }
 
-  export type ProductsList = Product[];
+  export type ProductsList = IProduct[];

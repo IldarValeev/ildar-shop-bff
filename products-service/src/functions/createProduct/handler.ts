@@ -3,25 +3,21 @@ import { middyfy } from '@libs/lambda';
 import { ProductsDbService } from 'src/data/db/db-service/products-dynamo-db-service';
 import schema from './schema';
 
-const SOURCE = `Lambda [getProductById] -`
+const SOURCE = `Lambda [createProduct] -`
 
-const getProductById: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
-  console.log(`${SOURCE} started`);
+const createProduct: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+  console.log(`${SOURCE} started`); 
   console.log(`${SOURCE} event: ${JSON.stringify(event)}`);
 
   const productsDbService = new ProductsDbService();
 
   try {
-    const { productId = '' } = event.pathParameters;
-    const product = await productsDbService.getProductById(productId);
+    const createProductObj = event.body;
+    const product = await productsDbService.createProduct(createProductObj);
 
-    if (product) {
-      return formatJSONResponse({
-        product: product,
-      });
-    }
-
-    return formatJSONResponse({ message: `Product '${productId}' not found` }, 404);
+    return formatJSONResponse({
+      product: product,
+    });
   }
   catch (e) {
     return formatJSONErrorResponse(e, SOURCE);
@@ -31,4 +27,4 @@ const getProductById: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
   }
 };
 
-export const main = middyfy(getProductById);
+export const main = middyfy(createProduct);

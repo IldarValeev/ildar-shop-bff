@@ -1,0 +1,124 @@
+{
+    "StocksTable": [
+        {
+            "PutRequest": {
+                "Item": {
+                    "product_id": {
+                        "S": "0567ec4b-b10c-48c5-9345-fc73c48a80aa"
+                    },
+                    "count": {
+                        "N": "10"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "product_id": {
+                        "S": "1567ec4b-b10c-48c5-9345-fc73c48a80aa"
+                    },
+                    "count": {
+                        "N": "10"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "product_id": {
+                        "S": "2567ec4b-b10c-48c5-9345-fc73c48a80aa"
+                    },
+                    "count": {
+                        "N": "20"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "product_id": {
+                        "S": "3567ec4b-b10c-48c5-9345-fc73c48a80aa"
+                    },
+                    "count": {
+                        "N": "30"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "product_id": {
+                        "S": "4567ec4b-b10c-48c5-9345-fc73c48a80aa"
+                    },
+                    "count": {
+                        "N": "40"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "product_id": {
+                        "S": "5567ec4b-b10c-48c5-9345-fc73c48a80aa"
+                    },
+                    "count": {
+                        "N": "50"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "product_id": {
+                        "S": "6567ec4b-b10c-48c5-9345-fc73c48a80aa"
+                    },
+                    "count": {
+                        "N": "60"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "product_id": {
+                        "S": "7567ec4b-b10c-48c5-9345-fc73c48a80aa"
+                    },
+                    "count": {
+                        "N": "70"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "product_id": {
+                        "S": "8567ec4b-b10c-48c5-9345-fc73c48a80aa"
+                    },
+                    "count": {
+                        "N": "80"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "product_id": {
+                        "S": "9567ec4b-b10c-48c5-9345-fc73c48a80aa"
+                    },
+                    "count": {
+                        "N": "90"
+                    }
+                }
+            }
+        }
+    ]
+}
