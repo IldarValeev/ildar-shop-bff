@@ -1,14 +1,15 @@
 import type { AWS } from '@serverless/typescript';
-
-import hello from '@functions/hello';
+import getProductsList from '@functions/getProductsList';
+import getProductById from '@functions/getProductById';
+import createProduct from '@functions/createProduct';
 
 const serverlessConfiguration: AWS = {
-	service: 'products-service',
+	service: 'ildar-eshop-products-service',
 	frameworkVersion: '3',
-	plugins: ['serverless-esbuild'],
+	plugins: ['serverless-auto-swagger', 'serverless-offline', 'serverless-esbuild'],
 	provider: {
 		name: 'aws',
-		runtime: 'nodejs14.x',
+		runtime: 'nodejs18.x',
 		region: 'eu-west-1',
 		httpApi: {
 			cors: true,
@@ -20,10 +21,71 @@ const serverlessConfiguration: AWS = {
 		environment: {
 			AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
 			NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+			PRODUCTS_TABLE_NAME: '${self:resources.Resources.ProductsTable.Properties.TableName}',
+			STOCKS_TABLE_NAME: '${self:resources.Resources.StocksTable.Properties.TableName}',
+		},
+		iam: {
+			role: {
+				statements: [
+					{
+						Effect: 'Allow',
+						Action: [
+							'dynamodb:DescribeTable',
+							'dynamodb:Query',
+							'dynamodb:Scan',
+							'dynamodb:GetItem',
+							'dynamodb:PutItem',
+							'dynamodb:UpdateItem',
+							'dynamodb:DeleteItem',
+						],
+						Resource: [
+							{ 'Fn::GetAtt': ['${self:provider.environment.PRODUCTS_TABLE_NAME}', 'Arn'] },
+							{ 'Fn::GetAtt': ['${self:provider.environment.STOCKS_TABLE_NAME}', 'Arn'] },
+						],
+					},
+				],
+			},
 		},
 	},
+	
 	// import the function via paths
-	functions: { hello },
+	functions: {
+		getProductsList,
+		getProductById,
+		createProduct,
+	},
+	resources: {
+		Resources: {
+			ProductsTable: {
+				Type: 'AWS::DynamoDB::Table',
+				DeletionPolicy: 'Delete',
+				Properties: {
+					TableName: 'ProductsTable',
+					AttributeDefinitions: [
+						{ AttributeName: 'id', AttributeType: 'S' },
+					],
+					KeySchema: [
+						{ AttributeName: 'id', KeyType: 'HASH' },
+					],
+					BillingMode: 'PAY_PER_REQUEST'
+				},
+			},
+			StocksTable: {
+				Type: 'AWS::DynamoDB::Table',
+				DeletionPolicy: 'Delete',
+				Properties: {
+					TableName: 'StocksTable',
+					AttributeDefinitions: [
+						{ AttributeName: 'product_id', AttributeType: 'S' },
+					],
+					KeySchema: [
+						{ AttributeName: 'product_id', KeyType: 'HASH' },
+					],
+					BillingMode: 'PAY_PER_REQUEST'
+				},
+			}
+		}
+	},
 	package: { individually: true },
 	custom: {
 		esbuild: {
@@ -31,11 +93,18 @@ const serverlessConfiguration: AWS = {
 			minify: false,
 			sourcemap: true,
 			exclude: ['aws-sdk'],
-			target: 'node14',
+			target: 'node18',
 			define: { 'require.resolve': undefined },
 			platform: 'node',
 			concurrency: 10,
 		},
+		autoswagger: {
+			typefiles: [
+				'src/types/create-product.ts',
+				'src/types/product.ts',
+				'src/types/stock.ts',
+			]
+		}
 	},
 };
 

@@ -53,3 +53,10 @@ jspm_packages
 # Serverless directories
 .serverless
 
+#EsBuild
+.esbuild
+
+#SWAGGER
+/swagger
+
+
