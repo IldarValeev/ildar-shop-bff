@@ -2,6 +2,7 @@ import type { AWS } from '@serverless/typescript';
 import getProductsList from '@functions/getProductsList';
 import getProductById from '@functions/getProductById';
 import createProduct from '@functions/createProduct';
+import catalogBatchProcess from '@functions/catalogBatchProcess';
 
 const serverlessConfiguration: AWS = {
 	service: 'ildar-eshop-products-service',
@@ -23,6 +24,7 @@ const serverlessConfiguration: AWS = {
 			NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
 			PRODUCTS_TABLE_NAME: '${self:resources.Resources.ProductsTable.Properties.TableName}',
 			STOCKS_TABLE_NAME: '${self:resources.Resources.StocksTable.Properties.TableName}',
+			SQS_URL: { "Ref": 'SQSQueue' }
 		},
 		iam: {
 			role: {
@@ -43,16 +45,26 @@ const serverlessConfiguration: AWS = {
 							{ 'Fn::GetAtt': ['${self:provider.environment.STOCKS_TABLE_NAME}', 'Arn'] },
 						],
 					},
+					{
+						Effect: 'Allow',
+						Action: [
+							'sqs:*'
+						],
+						Resource: [
+							{ 'Fn::GetAtt': ['SQSQueue', 'Arn'] },
+						],
+					},
 				],
 			},
 		},
 	},
-	
+
 	// import the function via paths
 	functions: {
 		getProductsList,
 		getProductById,
 		createProduct,
+		catalogBatchProcess,
 	},
 	resources: {
 		Resources: {
@@ -83,7 +95,16 @@ const serverlessConfiguration: AWS = {
 					],
 					BillingMode: 'PAY_PER_REQUEST'
 				},
+			},
+			SQSQueue: {
+				Type: 'AWS::SQS::Queue',
+				Properties: {
+					QueueName: "ildarShopCatalogItemsQueue",
+				}
 			}
+			// 	Type: 
+			// Properties:
+			// 	QueueName: rs- school - app - sqs - queue
 		}
 	},
 	package: { individually: true },
