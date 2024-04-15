@@ -5,7 +5,7 @@ export default {
   events: [
     {
       sqs: {
-        arn: { 'Fn::GetAtt': ['SQSQueue', 'Arn'] },
+        arn: { 'Fn::GetAtt': ['${self:custom.sqsLogicalResource}', 'Arn'] },
         batchSize: 5,
       }
     },

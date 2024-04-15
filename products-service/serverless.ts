@@ -24,7 +24,8 @@ const serverlessConfiguration: AWS = {
 			NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
 			PRODUCTS_TABLE_NAME: '${self:resources.Resources.ProductsTable.Properties.TableName}',
 			STOCKS_TABLE_NAME: '${self:resources.Resources.StocksTable.Properties.TableName}',
-			SQS_URL: { "Ref": 'SQSQueue' }
+			SQS_URL: { 'Ref': '${self:custom.sqsLogicalResource}'},
+			SNS_ARN: { 'Ref': '${self:custom.snsLogicalResource}'},
 		},
 		iam: {
 			role: {
@@ -51,7 +52,16 @@ const serverlessConfiguration: AWS = {
 							'sqs:*'
 						],
 						Resource: [
-							{ 'Fn::GetAtt': ['SQSQueue', 'Arn'] },
+							{ 'Fn::GetAtt': ['${self:custom.sqsLogicalResource}', 'Arn'] },
+						],
+					},
+					{
+						Effect: 'Allow',
+						Action: [
+							'sns:*'
+						],
+						Resource: [
+							{ 'Ref': '${self:custom.snsLogicalResource}'},
 						],
 					},
 				],
@@ -101,14 +111,64 @@ const serverlessConfiguration: AWS = {
 				Properties: {
 					QueueName: "ildarShopCatalogItemsQueue",
 				}
+			},
+			SNSTopic: {
+				Type: 'AWS::SNS::Topic',
+				Properties: {
+					TopicName: '${self:custom.snsTopicName}',
+				}
+			},
+			SNSSubscription1: {
+				Type: 'AWS::SNS::Subscription',
+				Properties: {
+					Endpoint: '${self:custom.snsEmailEndpoint1}',
+					Protocol: 'email',
+					TopicArn: { 'Ref': '${self:custom.snsLogicalResource}'},
+					FilterPolicyScope: 'MessageBody',
+					FilterPolicy: {
+						"price": ["79.99"]
+					}
+				}
+			},
+			SNSSubscription2: {
+				Type: 'AWS::SNS::Subscription',
+				Properties: {
+					Endpoint: '${self:custom.snsEmailEndpoint2}',
+					Protocol: 'email',
+					TopicArn: { 'Ref': '${self:custom.snsLogicalResource}'},
+					FilterPolicyScope: 'MessageBody',
+					FilterPolicy: {
+						"count": ["20"]
+					}
+				}
+			},			
+		},
+		Outputs: {
+			SQSUrl: {
+				Value: {
+					Ref:  '${self:custom.sqsLogicalResource}',
+				},
+				Export: {
+					Name: 'SQSUrl',
+				}
+			},
+			SQSArn: {
+				Value: {
+					'Fn::GetAtt': ['${self:custom.sqsLogicalResource}', 'Arn']
+				},
+				Export: {
+					Name: 'SQSArn',
+				}
 			}
-			// 	Type: 
-			// Properties:
-			// 	QueueName: rs- school - app - sqs - queue
 		}
-	},
+	}, 
 	package: { individually: true },
 	custom: {
+		sqsLogicalResource: 'SQSQueue',
+		snsLogicalResource: 'SNSTopic',
+		snsTopicName: 'ILDAR-eshop-product-created',
+		snsEmailEndpoint1: 'ildar189@gmail.com',
+		snsEmailEndpoint2: 'mail_zzz@list.ru',
 		esbuild: {
 			bundle: true,
 			minify: false,

@@ -17,6 +17,8 @@ const getProductsList: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async
     return formatJSONResponse(productList);
   }
   catch (e) {
+    console.error(e);
+
     return formatJSONErrorResponse(e, SOURCE);
   }
   finally {

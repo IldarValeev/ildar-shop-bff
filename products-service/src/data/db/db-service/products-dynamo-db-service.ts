@@ -51,7 +51,7 @@ export class ProductsDbService extends DynamoDbService {
     }
 
     public async createProduct(productToCreate: ICreateProduct): Promise<IProduct> {
-        const id: string = uuidv4();
+        const id: string = productToCreate.id ?? uuidv4();
 
         const productDB: ProductDB = {
             id,

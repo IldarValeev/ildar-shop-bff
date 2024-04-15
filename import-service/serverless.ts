@@ -23,7 +23,8 @@ const serverlessConfiguration: AWS = {
 			NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
 			BUCKET_NAME: '${self:custom.s3.bucketName}',
 			UPLOADED_FOLDER: '${self:custom.s3.uploadedFolder}',
-			PARSED_FOLDER: '${self:custom.s3.parsedFolder}'
+			PARSED_FOLDER: '${self:custom.s3.parsedFolder}',
+			SQS_URL: '${self:custom.SQSUrl}',
 		},
 		iam: {
 			role: {
@@ -57,6 +58,15 @@ const serverlessConfiguration: AWS = {
 					// 	],
 					// 	Resource: ['arn:aws:s3:::${self:custom.s3.bucketName}/${self:custom.s3.uploadedFolder}/*', 'arn:aws:s3:::${self:custom.s3.bucketName}/${self:custom.s3.parsedFolder}/*']
 					// }
+					{
+						Effect: 'Allow',
+						Action: [
+							'sqs:*'
+						],
+						Resource: [
+							'${self:custom.SQSArn}',
+						],
+					},
 				],
 			},
 		},
@@ -67,6 +77,14 @@ const serverlessConfiguration: AWS = {
 	},
 	package: { individually: true },
 	custom: {
+		// sqsURL: 'https://sqs.eu-west-1.amazonaws.com/533267437859/ildarShopCatalogItemsQueue',
+		// sqsARN: 'arn:aws:sqs:eu-west-1:533267437859:ildarShopCatalogItemsQueue',
+		SQSUrl: {
+			'Fn::ImportValue': 'SQSUrl',
+		},
+		SQSArn: {
+			'Fn::ImportValue': 'SQSArn',
+		},
 		esbuild: {
 			bundle: true,
 			minify: false,
