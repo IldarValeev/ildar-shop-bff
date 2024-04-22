@@ -1,17 +1,17 @@
-import { ValidatedEventAPIGatewayProxyEvent, formatJSONErrorResponse, formatJSONResponse } from '@libs/api-gateway';
-import { CopyObjectCommand, GetObjectCommand, DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import schema from './schema';
-import { S3Event } from 'aws-lambda';
-import neatCsv from 'neat-csv';
+import { CopyObjectCommand, DeleteObjectCommand, GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
 import middy from '@middy/core';
+import { S3Event, S3Handler } from 'aws-lambda';
+import neatCsv from 'neat-csv';
 
 const SOURCE = `Lambda [importFileParser] -`
 
-const importFileParser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const importFileParser: S3Handler = async (event) => {
   console.log(`${SOURCE} started`);
   console.log(`${SOURCE} event: ${JSON.stringify(event)}`);
 
   const s3Client = new S3Client({ region: 'eu-west-1' });
+  const clientSqs = new SQSClient({ region: "eu-west-1" });
 
   try {
     await Promise.all((event as any as S3Event).Records.map(async record => {
@@ -31,9 +31,13 @@ const importFileParser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
       console.info(`Reading '${key}' finished`);
       console.info(`Parsing '${key}'...`);
 
-      records.forEach(record => console.log(record));
+      const sendCommands = records.map(record => {
+        return clientSqs.send(new SendMessageCommand({ QueueUrl: process.env.SQS_URL, MessageBody: JSON.stringify(record) }))
+      });
 
-      console.info(`Parsing '${key}' finished`);
+      await Promise.all(sendCommands);
+
+      console.info(`Parsing '${key}' finished!`);
 
       const copyToPath = key.replace(`${process.env.UPLOADED_FOLDER}`, `${process.env.PARSED_FOLDER}`);
 
@@ -61,16 +65,13 @@ const importFileParser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = asyn
       console.info(`Deleting '${key}' finished`);
     })
     );
-
-    return formatJSONResponse('Parsing is done');
   }
   catch (e) {
     console.error(e);
-
-    return formatJSONErrorResponse(e, SOURCE);
   }
   finally {
     s3Client.destroy();
+    clientSqs.destroy();
   }
 };
 

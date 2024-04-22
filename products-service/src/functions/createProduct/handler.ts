@@ -20,6 +20,8 @@ const createProduct: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
     });
   }
   catch (e) {
+    console.error(e);
+
     return formatJSONErrorResponse(e, SOURCE);
   }
   finally {

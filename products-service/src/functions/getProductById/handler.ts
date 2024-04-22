@@ -24,6 +24,8 @@ const getProductById: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
     return formatJSONResponse({ message: `Product '${productId}' not found` }, 404);
   }
   catch (e) {
+    console.error(e);
+
     return formatJSONErrorResponse(e, SOURCE);
   }
   finally {
