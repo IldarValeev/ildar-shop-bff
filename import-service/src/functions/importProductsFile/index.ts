@@ -15,6 +15,18 @@ export default {
             }
           }
         },
+        responses: {
+					default: {},
+					200: {
+						description: 'Returns signed URL',
+						bodyType: 'string',
+					},
+					404: 'File name not provided',
+					500: 'Backend Error',
+				},
+        authorizer: {
+					name: 'importFunctionServiceAuthorizer',
+				},
       },
     },
   ],

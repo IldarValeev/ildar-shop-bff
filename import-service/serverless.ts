@@ -13,6 +13,15 @@ const serverlessConfiguration: AWS = {
 		region: 'eu-west-1',
 		httpApi: {
 			cors: true,
+			authorizers: {
+				importFunctionServiceAuthorizer: {
+					type: 'request',
+					resultTtlInSeconds: 0,
+					name: 'ildar-eshop-authorization-service-beta-basicAuthorizer',
+					functionArn: 'arn:aws:lambda:eu-west-1:533267437859:function:ildar-eshop-authorization-service-beta-basicAuthorizer',
+					identitySource: '$request.header.Authorization',
+				},
+			},
 		},
 		apiGateway: {
 			minimumCompressionSize: 1024,
